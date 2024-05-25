@@ -16,15 +16,15 @@
         <div class="div"></div>
         <div class=""><a href="configure.html" class="configure-btn anims">Аниме</a></div>
         <div class="div"></div>
+
         <div class="search-container">
-            <input type="text" class="search" placeholder="Поиск">
-            <img src="../static/images/loupe.png" alt="Search" class="search-icon" style="opacity: 60%;">
+            <input type="text" id="search-input" class="search" placeholder="Поиск">
+            <ul id="search-results" class="search-results"></ul>
         </div>
+        
         <div class="el1" style="padding-left: 7.5%;"><img src="../static/images/avatar.png" style="width: 40px; height: 40px;" class="avatar anims"></div>
         <div class="div"></div>
     </header>
-
-
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
 
@@ -81,17 +81,30 @@
     <script>
         let page = 0; // Счетчик страниц
         const perPage = 10;
-
+    
         // Подгрузка новых карточек при скролле
         window.addEventListener('scroll', () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
                 loadMoreAnime();
             }
         });
 
+        // Добавление обработчика события клика на карточки аниме
+        document.querySelectorAll('.anime-card').forEach(card => {
+            card.addEventListener('click', function(event) {
+                event.preventDefault(); // Отменяем стандартное действие перехода по ссылке
+
+                const animeId = this.getAttribute('data-id');
+                const url = `/anime/${animeId}`;
+
+                // Открываем новое окно или вкладку с URL аниме
+                window.open(url, '_blank');
+            });
+        });
+    
         // Загрузка новых карточек
         function loadMoreAnime() {
-            console.log("Loading more anime with genres:", selectedGenres);
+            
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -107,32 +120,36 @@
             xhr.open('GET', `/load_more_anime?page=${page}&per_page=${perPage}`, true);
             xhr.send();
         }
-
+    
         // Добавление на сайт новых карточек
         function appendAnimeToPage(animeData) {
-            const animeList = document.getElementById('anime-list');
-            animeData.forEach(anime => {
-                const newAnimeCard = document.createElement('div');
-                newAnimeCard.classList.add('card', 'show', 'anims');
-                newAnimeCard.innerHTML = `
-                    <div class="picture">
-                        <img src="${anime['Image src']}" class="img-banner">
-                    </div>
-                    <div class="content">
-                        <div class="names">
-                            <div class="shortName">${anime['Short title']}</div>
-                            <div class="name">${anime['Title']}</div>
-                        </div>
-                        <div class="episodes">${anime['Count episodes']} серий</div>
-                        <div class='episodes'>${anime['Tags']} жанры</div>
-                        <div class="description">${anime['Description']}</div>
-                        <!-- Другие данные о аниме -->
-                    </div>
-                `;
-                animeList.appendChild(newAnimeCard);
-            });
-        }
-
+        const animeList = document.getElementById('anime-list');
+        animeData.forEach(anime => {
+        const newAnimeCard = document.createElement('div');
+        newAnimeCard.classList.add('card', 'show', 'anims');
+        newAnimeCard.setAttribute('data-id', anime['id']); // Устанавливаем data-id для каждой карточки
+        newAnimeCard.innerHTML = `
+            <div class="picture">
+                <img src="${anime['Image src']}" class="img-banner">
+            </div>
+            <div class="content">
+                <div class="names">
+                    <div class="shortName">${anime['Short title']}</div>
+                    <div class="name">${anime['Title']}</div>
+                </div>
+                <div class="episodes">${anime['Count episodes']} серий</div>
+                <div class='episodes'>${anime['Tags']} жанры</div>
+                <div class="description">${anime['Description']}</div>
+            </div>
+        `;
+        newAnimeCard.addEventListener('click', function() {
+            const animeId = this.getAttribute('data-id');
+            window.open(`/anime/${animeId}`, '_blank');
+        });
+        animeList.appendChild(newAnimeCard);
+    });
+}
+    
         // Загрузка первой порции данных при загрузке страницы
         window.onload = loadMoreAnime;
     </script>

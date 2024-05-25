@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ anime['Title'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css.css') }}">
+</head>
+<body>
+    <header>
+        <h1>{{ anime['Title'] }}</h1>
+    </header>
+    <div class="anime-details">
+        <img src="{{ anime['Image src'] }}" alt="{{ anime['Title'] }}">
+        <p><strong>Описание:</strong> {{ anime['Description'] }}</p>
+        <p><strong>Количество серий:</strong> {{ anime['Count episodes'] }}</p>
+        <p><strong>Жанры:</strong> {{ anime['Tags'] }}</p>
+    </div>
+</body>
+</html>

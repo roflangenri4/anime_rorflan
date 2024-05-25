@@ -9,6 +9,28 @@ body {
 
 /* HEADER */
 
+/* выпадающее окно */
+.search-results {
+    display: none; /* Скрыть результаты по умолчанию */
+    position: absolute;
+    z-index: 1;
+    background-color: #f9f9f9;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+}
+
+.search-results li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.search-results li:hover {
+    background-color: #f1f1f1;
+}
+/* для выпадающего окна поиска*/
+
 header {
     display: flex;
     font-weight: bold; 
